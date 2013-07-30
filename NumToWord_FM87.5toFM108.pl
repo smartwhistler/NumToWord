@@ -6,13 +6,21 @@ use encoding 'utf8';
 use Encode;
 use utf8;
 
-# FM: From, 87.5 To, 108.5
+# FM: From, 87.5 To, 108
 my $fm_num=87.5;		 # 从87.5开始
 my @fm_all_num=();		 # 保存所有数字
-while($fm_num<=108.5) {
+while($fm_num<=108) {
 	push(@fm_all_num, $fm_num);
-	$fm_num+=0.5;
+	$fm_num+=0.1;
+	$fm_num = sprintf("%.1f", $fm_num);
+	if($fm_num =~ m/\.0$/) {
+		my $tmp = $fm_num;
+		$tmp =~ s/\.0$//;
+		push(@fm_all_num, $tmp);
+	}
 }
+my %hash = ();
+@fm_all_num = grep {!$hash{$_}++} @fm_all_num;
 
 foreach(@fm_all_num) {
 	my @all_version_for_the_num;
@@ -61,8 +69,7 @@ foreach(@fm_all_num) {
 	push(@all_version_for_the_num, $normal_without_dot_onetoyao);
 
 	# 去重
-	my %hash = ();
 	@all_version_for_the_num = grep {!$hash{$_}++} @all_version_for_the_num;
 
-	printf("%s\t".("%s\t" x @all_version_for_the_num)."\n", $_, @all_version_for_the_num);
+	printf("%s".("\t%s" x @all_version_for_the_num)."\n", $_, @all_version_for_the_num);
 }
